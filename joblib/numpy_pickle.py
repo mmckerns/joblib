@@ -6,32 +6,39 @@ Utilities for fast persistence of big data, with optional compression.
 # Copyright (c) 2009 Gael Varoquaux
 # License: BSD Style, 3 clauses.
 
-import pickle
-import traceback
-import sys
-import os
-import zlib
-import warnings
-import struct
 import codecs
+import os
+import pickle
+import struct
+import sys
+import traceback
+import warnings
+import zlib
+from io import BytesIO
 
 from ._compat import _basestring
 
-from io import BytesIO
-
 PY3 = sys.version_info[0] >= 3
 
-if PY3:
-    Unpickler = pickle._Unpickler
-    Pickler = pickle._Pickler
 
+try:
+    import dill
+    Pickler = dill.Pickler
+    Unpickler = dill.Unpickler
+except ImportError:
+    if PY3:
+        Unpickler = pickle._Unpickler
+        Pickler = pickle._Pickler
+    else:
+        Pickler = pickle.Pickler
+        Unpickler = pickle.Unpickler
+
+if PY3:
     def asbytes(s):
         if isinstance(s, bytes):
             return s
         return s.encode('latin1')
 else:
-    Unpickler = pickle.Unpickler
-    Pickler = pickle.Pickler
     asbytes = str
 
 

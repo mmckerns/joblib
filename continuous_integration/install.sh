@@ -79,4 +79,8 @@ if [[ "$COVERAGE" == "true" ]]; then
     pip install coverage coveralls
 fi
 
+if [ ! -z "$DILL_VERSION" ]; then
+    pip install dill
+fi
+
 python setup.py install
