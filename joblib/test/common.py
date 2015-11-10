@@ -28,40 +28,6 @@ except ImportError:
     np = None
 
 
-# A decorator to run tests only when dill is available
-try:
-    import dill
-
-    def with_dill(func):
-        """ A decorator to skip tests requiring dill.
-        """
-        return func
-
-except ImportError:
-    def with_dill(func):
-        """ A decorator to skip tests requiring dill.
-        """
-        def my_func():
-            raise nose.SkipTest('Test requires dill')
-        return my_func
-    dill = None
-
-
-# A decorator to run tests only when python 3 is available
-if sys.version_info[0] >= 3:
-    def with_py3(func):
-        """ A decorator to skip tests requiring python 3.
-        """
-        return func
-else:
-    def with_py3(func):
-        """ A decorator to skip tests requiring python 3.
-        """
-        def my_func():
-            raise nose.SkipTest('Test requires python 3')
-        return my_func
-
-
 # A utility to kill the test runner in case a multiprocessing assumption
 # triggers an infinite wait on a pipe by the master process for one of its
 # failed workers

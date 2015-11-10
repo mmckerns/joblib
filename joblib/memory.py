@@ -33,14 +33,6 @@ from .disk import mkdirp, rm_subdirs
 from .func_inspect import filter_args, format_call, format_signature, get_func_code, get_func_name
 from .logger import Logger, format_time, pformat
 
-try:
-    import dill as pickle
-except ImportError:
-    try:
-        import cPickle as pickle
-    except ImportError:
-        import pickle
-
 
 FIRST_LINE_TEXT = "# first line:"
 

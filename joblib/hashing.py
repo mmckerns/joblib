@@ -9,23 +9,15 @@ hashing of numpy arrays.
 
 import hashlib
 import io
-import struct
 import sys
 import types
 import warnings
+
 from ._compat import _bytes_or_unicode
+from .externals import dill as pickle
 
 PY3 = sys.version[0] == '3'
-
-try:
-    import dill as pickle
-    Pickler = pickle.Pickler
-except ImportError:
-    import pickle
-    if PY3:
-        Pickler = pickle._Pickler
-    else:
-        Pickler = pickle.Pickler
+Pickler = pickle.Pickler
 
 
 class _ConsistentSet(object):

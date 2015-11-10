@@ -20,7 +20,7 @@ import nose
 
 from joblib.memory import Memory, MemorizedFunc, NotMemorizedFunc, MemorizedResult
 from joblib.memory import NotMemorizedResult, _FUNCTION_HASHES
-from joblib.test.common import with_dill, with_numpy, np
+from joblib.test.common import with_numpy, np
 
 
 ###############################################################################
@@ -640,7 +640,6 @@ def test_memory_file_modification():
     nose.tools.assert_equal(my_stdout.getvalue(), '1\n2\nReloading\nx=1\n')
 
 
-@with_dill
 def test_memory_arg_lambda():
     " Test memory with a lambda argument."
 
@@ -667,7 +666,6 @@ def test_memory_arg_lambda():
     nose.tools.assert_equal(accum['value'], 2)
 
 
-@with_dill
 def test_memory_arg_nested():
     " Test memory with a nested function argument."
 
