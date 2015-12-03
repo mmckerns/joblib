@@ -624,9 +624,6 @@ def _namespace(obj):
 
     For example:
 
-    >>> from functools import partial
-    >>> p = partial(int, base=2)
-    >>> _namespace(p)
     [\'functools\', \'partial\']
     """
     # mostly for functions and modules and such

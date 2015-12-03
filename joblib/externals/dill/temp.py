@@ -24,10 +24,6 @@ from .dill import PY3
 def capture(stream='stdout'):
     """builds a context that temporarily replaces the given stream name
 
-    >>> with capture('stdout') as out:
-    ...   print "foo!"
-    ... 
-    >>> print out.getvalue()
     foo!
 
     """
@@ -55,10 +51,6 @@ def load_source(file, **kwds):
     alias: string name of stored object
     mode: mode to open the file, one of: {'r', 'rb'}
 
-    >>> f = lambda x: x**2
-    >>> pyfile = dill.temp.dump_source(f, alias='_f')
-    >>> _f = dill.temp.load_source(pyfile)
-    >>> _f(4)
     16
     """
     alias = kwds.pop('alias', None)
@@ -80,17 +72,8 @@ def dump_source(object, **kwds):
     """write object source to a NamedTemporaryFile (instead of dill.dump)
 Loads with "import" or "dill.temp.load_source".  Returns the filehandle.
 
-    >>> f = lambda x: x**2
-    >>> pyfile = dill.temp.dump_source(f, alias='_f')
-    >>> _f = dill.temp.load_source(pyfile)
-    >>> _f(4)
     16
 
-    >>> f = lambda x: x**2
-    >>> pyfile = dill.temp.dump_source(f, dir='.')
-    >>> modulename = os.path.basename(pyfile.name).split('.py')[0]
-    >>> exec('from %s import f as _f' % modulename)
-    >>> _f(4)
     16
 
 Optional kwds:
@@ -126,8 +109,6 @@ def load(file, **kwds):
     file: filehandle
     mode: mode to open the file, one of: {'r', 'rb'}
 
-    >>> dumpfile = dill.temp.dump([1, 2, 3, 4, 5])
-    >>> dill.temp.load(dumpfile)
     [1, 2, 3, 4, 5]
     """
     import dill as pickle
@@ -139,8 +120,6 @@ def dump(object, **kwds):
     """dill.dump of object to a NamedTemporaryFile.
 Loads with "dill.temp.load".  Returns the filehandle.
 
-    >>> dumpfile = dill.temp.dump([1, 2, 3, 4, 5])
-    >>> dill.temp.load(dumpfile)
     [1, 2, 3, 4, 5]
 
 Optional kwds:
@@ -171,8 +150,6 @@ def loadIO(buffer, **kwds):
 
     buffer: buffer object
 
-    >>> dumpfile = dill.temp.dumpIO([1, 2, 3, 4, 5])
-    >>> dill.temp.loadIO(dumpfile)
     [1, 2, 3, 4, 5]
     """
     import dill as pickle
@@ -188,8 +165,6 @@ def dumpIO(object, **kwds):
     """dill.dump of object to a buffer.
 Loads with "dill.temp.loadIO".  Returns the buffer object.
 
-    >>> dumpfile = dill.temp.dumpIO([1, 2, 3, 4, 5])
-    >>> dill.temp.loadIO(dumpfile)
     [1, 2, 3, 4, 5]
     """
     import dill as pickle
@@ -208,10 +183,6 @@ def loadIO_source(buffer, **kwds):
     buffer: buffer object
     alias: string name of stored object
 
-    >>> f = lambda x:x**2
-    >>> pyfile = dill.temp.dumpIO_source(f, alias='_f')
-    >>> _f = dill.temp.loadIO_source(pyfile)
-    >>> _f(4)
     16
     """
     alias = kwds.pop('alias', None)
@@ -233,10 +204,6 @@ def dumpIO_source(object, **kwds):
     """write object source to a buffer (instead of dill.dump)
 Loads by with dill.temp.loadIO_source.  Returns the buffer object.
 
-    >>> f = lambda x:x**2
-    >>> pyfile = dill.temp.dumpIO_source(f, alias='_f')
-    >>> _f = dill.temp.loadIO_source(pyfile)
-    >>> _f(4)
     16
 
 Optional kwds:

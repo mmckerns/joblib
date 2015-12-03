@@ -86,8 +86,6 @@ or also::
 
 Dill is distributed under a 3-clause BSD license.
 
-    >>> import dill
-    >>> print (dill.license())
 
 
 Development Version 

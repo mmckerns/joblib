@@ -16,9 +16,6 @@ from .dill import _locate_object as at
 
 def parent(obj, objtype, ignore=()):
     """
->>> listiter = iter([4,5,6,7])
->>> obj = parent(listiter, list)
->>> obj == [4,5,6,7]  # actually 'is', but don't have handle any longer
 True
 
 NOTE: objtype can be a single type (e.g. int or list) or a tuple of types.
