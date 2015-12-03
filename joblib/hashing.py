@@ -14,10 +14,10 @@ import types
 import warnings
 
 from ._compat import _bytes_or_unicode
-from .externals import dill as pickle
+from .externals import dill
 
 PY3 = sys.version[0] == '3'
-Pickler = pickle.Pickler
+Pickler = dill.Pickler
 
 
 class _ConsistentSet(object):
@@ -44,8 +44,8 @@ class Hasher(Pickler):
         self.stream = io.BytesIO()
         # By default we want a pickle protocol that only changes with
         # the major python version and not the minor one
-        protocol = (pickle.DEFAULT_PROTOCOL if PY3
-                    else pickle.HIGHEST_PROTOCOL)
+        protocol = (dill.DEFAULT_PROTOCOL if PY3
+                    else dill.HIGHEST_PROTOCOL)
         Pickler.__init__(self, self.stream, protocol=protocol)
         # Initialise the hash obj
         self._hash = hashlib.new(hash_name)
@@ -53,7 +53,7 @@ class Hasher(Pickler):
     def hash(self, obj, return_digest=True):
         try:
             self.dump(obj)
-        except pickle.PicklingError as e:
+        except dill.PicklingError as e:
             e.args += ('PicklingError while hashing %r: %r' % (obj, e),)
             raise
         dumps = self.stream.getvalue()
@@ -70,7 +70,7 @@ class Hasher(Pickler):
             else:
                 func_name = obj.__name__
             inst = obj.__self__
-            if type(inst) == type(pickle):
+            if type(inst) == type(dill):
                 obj = _MyHash(func_name, inst.__name__)
             elif inst is None:
                 # type(None) or type(module) do not pickle
