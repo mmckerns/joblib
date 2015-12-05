@@ -399,9 +399,11 @@ def test_hashes_stay_the_same_with_numpy_objects():
     # rng.random.randn don't seem to be bit-identical on 32bit and
     # 64bit machines.
 
-    def non_picklable():
-        return 42
-
+    lambda_func = lambda: 1
+    if PY3:
+        lambda_func.__code__ = compile('1', '<string>', 'exec')
+    else:
+        lambda_func.func_code = compile('1', '<string>', 'exec')
     to_hash_list = [
         rng.randint(-1000, high=1000, size=50).astype('<i8'),
         tuple(rng.randn(3).astype('<f4') for _ in range(5)),
@@ -413,7 +415,7 @@ def test_hashes_stay_the_same_with_numpy_objects():
                 rng.randn(10).astype('<f4')
             ]
         },
-        non_picklable
+        lambda_func,
     ]
 
     # These expected results have been generated with joblib 0.9.0
@@ -421,12 +423,12 @@ def test_hashes_stay_the_same_with_numpy_objects():
                              '0d700f7f25ea670fd305e4cd93b0e8cd',
                              '83a2bdf843e79e4b3e26521db73088b9',
                              '63e0efd43c0a9ad92a07e8ce04338dd3',
-                             '554bbfe155cf26c50e0545657303d96d'],
+                             'f45360041e5b0fa8a7de8253dda6d6ee'],
                      'py3': ['10a6afc379ca2708acfbaef0ab676eab',
                              '988a7114f337f381393025911ebc823b',
                              'c6809f4b97e35f2fa0ee8d653cbd025c',
                              'b3ad17348e32728a7eb9cda1e7ede438',
-                             '98da19945ba0e6c5d5530d46b2b18c37']}
+                             '1274dd25b0b945066a6affdd68d131df']}
 
     py_version_str = 'py3' if PY3 else 'py2'
     expected_list = expected_dict[py_version_str]
