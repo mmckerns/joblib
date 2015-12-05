@@ -401,7 +401,10 @@ def test_hashes_stay_the_same_with_numpy_objects():
 
     lambda_func = lambda: 1
     if PY3:
-        lambda_func.__code__ = compile('1', '<string>', 'exec')
+        if sys.version[:3] in ('3.4', '3.5'):
+            lambda_func.__code__ = compile('1', '<string>', 'exec')
+        else:
+            lambda_func = None
     else:
         lambda_func.func_code = compile('1', '<string>', 'exec')
     to_hash_list = [
@@ -434,7 +437,8 @@ def test_hashes_stay_the_same_with_numpy_objects():
     expected_list = expected_dict[py_version_str]
 
     for to_hash, expected in zip(to_hash_list, expected_list):
-        yield assert_equal, hash(to_hash), expected
+        if to_hash is not None:
+            yield assert_equal, hash(to_hash), expected
 
 
 def test_hashing_pickling_error():
