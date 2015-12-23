@@ -206,19 +206,18 @@ def test_parallel_pickling():
     """ Check that pmap captures the errors when it is passed an object
         that cannot be pickled.
     """
-    def g(x):
-        return x ** 2
-
     try:
-        # pickling a local function always fail but the exception
-        # raised is a PickleError for python <= 3.4 and AttributeError
-        # for python >= 3.5
-        pickle.dumps(g)
-    except Exception as exc:
-        exception_class = exc.__class__
+        raise Exception
+    except Exception:
+        ex_type, ex, non_picklable = sys.exc_info()
 
-    assert_raises(exception_class, Parallel(),
-                  (delayed(g)(x) for x in range(10)))
+    assert_raises((pickle.PicklingError, TypeError), Parallel(),
+                  (delayed(non_picklable)(x) for x in range(10)))
+
+
+def test_parallel_lambda():
+    yield assert_equal, Parallel(n_jobs=2)(
+        delayed(lambda x: x**2)(x) for x in range(3)), [0, 1, 4]
 
 
 def test_error_capture():
