@@ -497,6 +497,10 @@ else:
     _typemap = dict((v, k) for k, v in _reverse_typemap.iteritems())
     _builtin_typemap = dict((v, k) for k, v in dict(_create_typemap()).iteritems())
 del _builtin_typemap[CodeType]
+del _builtin_typemap[ClassType]
+del _builtin_typemap[MethodType]
+_builtin_typemap.pop(TypeType, None)
+_builtin_typemap.pop(type(None), None)
 
 def _unmarshal(string):
     return marshal.loads(string)
@@ -884,10 +888,10 @@ def save_attrgetter(pickler, obj):
     return
 
 def _save_file(pickler, obj, open_):
-    obj.flush()
     if obj.closed:
         position = None
     else:
+        obj.flush()
         if obj in (sys.__stdout__, sys.__stderr__, sys.__stdin__):
             position = -1
         else:
@@ -1185,7 +1189,9 @@ def save_module(pickler, obj):
 def save_type(pickler, obj):
    #stack.add(obj) #XXX: probably don't need object from all cases below
     if obj in _builtin_typemap:
+        log.info("T0: %s" % obj)
         StockPickler.save_global(pickler, obj)
+        log.info("# T0")
     elif obj in _typemap:
         log.info("T1: %s" % obj)
         pickler.save_reduce(_load_type, (_typemap[obj],), obj=obj)
